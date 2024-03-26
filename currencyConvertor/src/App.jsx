@@ -9,7 +9,12 @@ function App() {
   const [convertedAmount, setConvertedAmount] = useState(0);
 
   const currencyInfo = useCurrencyinfo(from);
-  const options = Object.keys(currencyInfo);
+  if (!currencyInfo || !currencyInfo.conversion_rates) {
+    return <div>Loading...</div>; // Or any loading indicator
+  }
+  console.log(currencyInfo.conversion_rates)
+  
+  const options = Object.keys(currencyInfo.conversion_rates)
 
   const swap = () => {
     setFrom(to);
@@ -19,7 +24,7 @@ function App() {
   };
 
   const convert = () => {
-    setConvertedAmount(amount * currencyInfo[to]);
+    setConvertedAmount(amount * currencyInfo.conversion_rates[to]);
   };
 
   return (
@@ -42,7 +47,7 @@ function App() {
                 label="From"
                 amount={amount}
                 currencyOptions={options}
-                onCurrencyChange={(currency) => setFrom(currency)}
+                onCurrencyChange={(value) => setFrom(value)}
                 onAmountChange={(amount)=>setAmount(amount)}
                 selectCurrency={from} 
                 
